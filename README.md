@@ -91,7 +91,7 @@
 2. 在 Windows 上装好 **Python 3**（python.org），再下载 **OpenCorePkg 1.0.8** 发布包（github.com/acidanthera/OpenCorePkg/releases），解压后找到 `Utilities/macrecovery/macrecovery.py`；
 3. 在 `macrecovery` 目录打开命令行，运行 `python macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download`（这是拉 Sequoia 15 恢复镜像的固定参数：board-id 对应一台最高只支持到 Sequoia 的机型，`m` 后是 17 个 0）；下载得到 `com.apple.recovery.boot` 文件夹（里面是 BaseSystem.dmg + BaseSystem.chunklist，约 600MB）。⚠️ **别用 gibMacOS**：它的 Recovery-Only 模式只认老式 `RecoveryHDUpdate.pkg`/`RecoveryHDMetaDmg.pkg`，Big Sur 之后的系统根本没有这两个包，Sequoia 永远不会出现在那个列表里；直接下的完整安装器 `InstallAssistant.pkg`（15GB）在 Windows 上也做不成启动盘；
 4. 把 U 盘格式化成 **FAT32**（资源管理器右键 → 格式化，文件系统选 FAT32）；U 盘超 32G 时资源管理器不给 FAT32 选项，用 **Rufus**（rufus.ie）格：启动类型选「非可启动」，文件系统选 FAT32（Large FAT32）；
-5. 把 gibMacOS 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
+5. 把 macrecovery 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
 6. 把本目录的 **`EFI` 文件夹也拷到 U 盘根目录**（与 `com.apple.recovery.boot` 并列，不要多套一层目录）；
 7. 成品结构自检（U 盘根目录应该长这样）：
    - `EFI\BOOT\BOOTx64.efi`
@@ -99,7 +99,7 @@
    - `com.apple.recovery.boot\BaseSystem.dmg`
 8. （建议）把 **HeliPort.app**（OpenIntelWireless release v1.5.0，需要时另行下载）和这份 README 的副本也拷到 U 盘根目录备用。
 
-> ⚠️ 选错恢复镜像的信号：开口菜单进去显示的是别的系统版本、或提示要连 WiFi 且插网线没反应，多半是 gibMacOS 下错了目录/版本，回第 3 步重下 Sequoia 的 Recovery。
+> ⚠️ 选错恢复镜像的信号：开口菜单进去显示的是别的系统版本、或提示要连 WiFi 且插网线没反应，多半是恢复镜像下错了版本，回第 3 步重下 Sequoia 的 Recovery。
 
 ### 备选路线（想要离线完整安装器）：必须有一台能用的 Mac / 已装好的黑苹果
 
