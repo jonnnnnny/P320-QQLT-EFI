@@ -179,6 +179,8 @@
 				<string>[2026-11-14 MEASURED] UHD 630 native device-id 0x3E9B CONFIRMED WORKING: this QQLT drives a display over DP (H27T22 27-inch) in Windows. The "no-display ES" risk from v1 is resolved; no device-id spoof. DISPLAY CONNECTOR MAPPING STILL MUST BE CALIBRATED ON THE REAL MACHINE WITH HACKINTOOL. This config follows the M910Q repo + Dortania Coffee Lake desktop guide: platform-id 07009B3E drives displays from the UHD 630. The P320 Tiny has DP (x2) + optional HDMI; the M910Q EFI only patched con2 to HDMI (type 0x10) and left con0/con1 native - the same placeholder is used below.</string>
 				<key>#NOTE-2</key>
 				<string>IF YOU GET A BLACK SCREEN ON FIRST BOOT: (1) try the other physical video port first, (2) unplug one display output and boot with a single DP cable, (3) if still black, add boot-arg igfxonln=1, (4) then re-map connectors with Hackintool and write real framebuffer-conX-* values here.</string>
+				<key>#NOTE-3</key>
+				<string>[2026-11-15] DVMT workaround: framebuffer-stolenmem 19MB + framebuffer-fbmem 9MB (Dortania standard values for DVMT Pre-Allocated 32MB). The P320 BIOS DVMT setting was never confirmed; without these patches macOS framebuffer init fails on 32MB DVMT and the screen stays black (with backlight) after the picker. If BIOS DVMT can be set to 64MB, these patches are redundant but harmless.</string>
 				<key>#device-id</key>
 				<string>NOT SET on purpose. [2026-11-14 MEASURED] QQLT UHD 630 native device-id 0x3E9B confirmed working over DP - no spoof needed. The M910Q repo spoofed device-id 923E0000 (0x3E92) for its 8700T ES - only add device-id=&lt;923E0000&gt; here as a fallback if the framebuffer misbehaves (black screen after the OpenCore picker).</string>
 				<key>AAPL,ig-platform-id</key>
@@ -193,9 +195,17 @@
 				<data>
 				EAAAAA==
 				</data>
+				<key>framebuffer-fbmem</key>
+				<data>
+				AACQAA==
+				</data>
 				<key>framebuffer-patch-enable</key>
 				<data>
 				AQAAAA==
+				</data>
+				<key>framebuffer-stolenmem</key>
+				<data>
+				AAAwAQ==
 				</data>
 				<key>framebuffer-unifiedmem</key>
 				<data>
