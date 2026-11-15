@@ -82,7 +82,7 @@
 ## 3. 阶段三：做安装 U 盘（Windows 上，约 20 分钟 + 下载时间）
 
 1. U 盘插 Windows 电脑，**先备份 U 盘里的数据**；
-2. 运行 `gibMacOS.bat`：按 `C` 改目录、选 **macOS Sequoia（15.x，别选 Tahoe/26）**，按提示下载。下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 `BaseSystem.dmg` + `BaseSystem.chunklist`）；
+2. 运行 `gibMacOS.bat`：**先按 `R` 切换到 Recovery-Only 模式**（gibMacOS 默认下的是 15GB 完整安装器 `InstallAssistant.pkg`，Windows 上做不成启动盘，必须先切模式），再按 `C` 改目录、选 **macOS Sequoia（15.x，别选 Tahoe/26）**，按提示下载。下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 `BaseSystem.dmg` + `BaseSystem.chunklist`，约 600MB）；
 3. U 盘格式化成 **FAT32**：资源管理器右键 → 格式化 → 文件系统选 FAT32。U 盘超 32G 时资源管理器不给 FAT32 选项，用 Rufus 格：启动类型选「非可启动」，文件系统选 FAT32（Large FAT32）；
 4. 把 gibMacOS 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
 5. 把第 2 步填好三码的 **`EFI` 文件夹也拷到 U 盘根目录**（与 `com.apple.recovery.boot` 并列，不要多套一层目录）；
