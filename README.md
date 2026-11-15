@@ -111,7 +111,7 @@ config.plist 里的三码现在是**占位符，不能直接拿去登录 iCloud*
 ## 排障速查（按这个序，别乱改）
 
 1. **OpenCore 菜单黑屏（连菜单都不显示）** → 本包已补齐 `EFI/OC/Resources`（OcBinaryData，469 个文件），图形菜单正常显示；若个别机器仍黑屏，用 OCAT/ProperTree 打开 config.plist，把 `Misc > Boot > PickerMode` 由 `External` 改 `Builtin`（文字菜单），装机不受影响。
-2. **过了菜单黑屏（没画面）** → 先换另一个物理口（DP 换另一个 DP 口）、只插一根 DP 线开机；还黑：boot-args 加 `igfxonln=1`；进系统后用 Hackintool 校准 framebuffer 接口映射（config 里的 conX 目前只有 con2 按同平台经验预填了 HDMI 类型，其余是占位）。兜底：核显加 `device-id` = `923E0000`（0x3E92 伪装）再试——实测已证明不需要，优先走上面几步。
+2. **过了菜单黑屏（没画面）** → 先换另一个物理口（DP 换另一个 DP 口）、只插一根 DP 线开机；还黑：boot-args 加 `igfxonln=1`；本包已内置 framebuffer-stolenmem（19MB）+ framebuffer-fbmem（9MB），BIOS 的 DVMT Pre-Allocated 即使是 32M 也能亮——若 BIOS 里能设 DVMT 64M，设 64M 更干净；进系统后用 Hackintool 校准 framebuffer 接口映射（config 里的 conX 目前只有 con2 按同平台经验预填了 HDMI 类型，其余是占位）。兜底：核显加 `device-id` = `923E0000`（0x3E92 伪装）再试——实测已证明不需要，优先走上面几步。
 3. **卡代码 / 跑码停住** → 卡 CFG Lock 相关行：确认两个 CFG Lock quirk 是 true，或进 BIOS 关 CFG Lock；卡 `apfs_module_start` / 等待根设备：检查 Above 4G 是否开、XhciPortLimit 是否 true、换个 USB 口（优先后置 USB 2.0 口）；早期就重启回 BIOS：把 `SSDT-AWAC.aml` 的 Enabled 改 false 再试；其次怀疑散热器没压好导致 CPU 保护（按烤机清单重装散热器，别急着怀疑 EFI）。
 4. **没声音** → 先核对 codec：Windows 设备管理器 → 声音、视频和游戏控制器 → 看音频设备硬件 ID（VEN_10EC + DEV_0294 即 ALC294）。是 ALC294 的话，boot-args 里 `alcid` 依次试 `11`、`13`、`21`、`15`（改完重启），并同步改 `Pci(0x1f,0x3)` 下的 layout-id 为同值。当前 12 是联想 Tiny 平台验证过的布局，命中率最高。
 5. **有线网不通** → 先核对型号：Windows 设备管理器 → 网络适配器 → 看有线网卡硬件 ID（VEN_8086，DEV_15B7 即 I219-LM）。I219 全系列都在 IntelMausi 覆盖内，一般不用改；若仍不通，再按实际型号排查。
@@ -130,6 +130,7 @@ config.plist 里的三码现在是**占位符，不能直接拿去登录 iCloud*
 
 - v2（2026-11-14）：按实测硬件复核重出，核显确认走原生 3E9B（不用 spoof）、网卡确认为 AC 8265、CPU 6 核确认；配置本身相对 v1 无功能变化；音频 ALC294 / 有线 I219-LM 仍为推断，待装机后核对。
 - 2026-11-15 修复：补齐 `EFI/OC/Resources`（OcBinaryData，469 个文件）——OpenCore 官方包自带的 Resources 文件夹是空的，图形 Picker（PickerMode=External）因此黑屏；补齐后正常显示。
+- 2026-11-15 修复：config 增加 framebuffer-stolenmem（19MB）+ framebuffer-fbmem（9MB）——兼容 BIOS 的 DVMT Pre-Allocated 为 32M 的情况，之前没这组补丁、DVMT 32M 时选完安装器会黑屏（有背光、无图像）。
 - 仓库形态：EFI 文件夹原样上传，无压缩包分片，下载 ZIP 解压即用。
 
 ## 文件对照（出问题时知道动哪）
