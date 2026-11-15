@@ -10,7 +10,7 @@
 |---|---|---|
 | 1. 准备 | 备齐硬件、软件、EFI | Windows（P320 本机） |
 | 2. 填三码 | GenSMBIOS 生成 MacBookPro16,1 四项 | 任意 Windows 电脑 |
-| 3. 做安装 U 盘 | gibMacOS 下官方 Recovery + EFI 上盘 | Windows |
+| 3. 做安装 U 盘 | macrecovery.py 下官方 Recovery + EFI 上盘 | Windows |
 | 4. BIOS 设置 | 逐项对表，拍照备份先 | P320 开机进 BIOS |
 | 5. 装系统 | 抹第二块 M.2 → 装 Sequoia | P320 从 U 盘启动 |
 | 6. 首检 | 加速 / 有线网 / 声音，三项过关再登 iCloud | macOS 桌面 |
@@ -19,7 +19,7 @@
 | 9. 排障 | 出问题按速查表处理 | — |
 
 **三条红线（别碰）：**
-- ❌ 不要用网上任何"一键黑苹果 U 盘 / 精简镜像"——只用苹果官方 Recovery（gibMacOS 拉）+ 本包 EFI。
+- ❌ 不要用网上任何"一键黑苹果 U 盘 / 精简镜像"——只用苹果官方 Recovery（macrecovery.py 拉）+ 本包 EFI。
 - ❌ 不要在 BIOS 里点「恢复默认设置（Load Optimized Defaults）」——会清空魔改的 45W 功耗墙等设置。
 - ❌ 安装时不要选错目标盘——Windows 在 WDC WDS100T2B0C 1TB 盘上，macOS 只能装另一块 M.2；选错盘 Windows 就没了。
 
@@ -42,7 +42,7 @@
 
 | 软件 | 用途 | 下载地址 | 备注 |
 |---|---|---|---|
-| **gibMacOS** | 从苹果官方服务器下载 Sequoia Recovery 镜像 | github.com/corpnewt/gibMacOS | 解压后运行 `gibMacOS.bat` |
+| **macrecovery.py**（OpenCorePkg 自带） | 从苹果官方恢复服务器下载 Sequoia Recovery 镜像 | github.com/acidanthera/OpenCorePkg/releases（1.0.8 发布包内 `Utilities/macrecovery/`） | 需 Python 3，命令行运行 |
 | **GenSMBIOS** | 生成 MacBookPro16,1 的三码 | github.com/corpnewt/GenSMBIOS | Windows 运行 `GenSMBIOS.bat`，首次自动装 Python 环境 |
 | **Rufus** | U 盘 >32G 时格 FAT32 用 | rufus.ie | U 盘 ≤32G 时资源管理器直接格 FAT32 就行，不用它 |
 | **OCAuxiliaryTools（OCAT）** | 图形界面改 config.plist（填三码、改 alcid、开关 kext 都用它） | github.com/ic005k/OCAuxiliaryTools | Windows 版；别用记事本改 plist，容易改坏格式 |
@@ -82,7 +82,7 @@
 ## 3. 阶段三：做安装 U 盘（Windows 上，约 20 分钟 + 下载时间）
 
 1. U 盘插 Windows 电脑，**先备份 U 盘里的数据**；
-2. 运行 `gibMacOS.bat`：**先按 `R` 切换到 Recovery-Only 模式**（gibMacOS 默认下的是 15GB 完整安装器 `InstallAssistant.pkg`，Windows 上做不成启动盘，必须先切模式），再按 `C` 改目录、选 **macOS Sequoia（15.x，别选 Tahoe/26）**——列表按新到旧排列，Sequoia 在最前面几行，当前窗口只看到尾部老版本时往上滚动找，按提示下载。下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 `BaseSystem.dmg` + `BaseSystem.chunklist`，约 600MB）；
+2. 在 `macrecovery` 目录打开命令行，运行 `python macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download`（拉 Sequoia 15 恢复镜像的固定参数：board-id 对应一台最高只支持到 Sequoia 的机型，`m` 后是 17 个 0）。下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 `BaseSystem.dmg` + `BaseSystem.chunklist`，约 600MB）。⚠️ **别用 gibMacOS**：它的 Recovery-Only 模式只认老式 `RecoveryHDUpdate.pkg`/`RecoveryHDMetaDmg.pkg`，Big Sur 之后的系统根本没有这两个包，Sequoia 永远不会出现在那个列表里；直接下的完整安装器 `InstallAssistant.pkg`（15GB）在 Windows 上也做不成启动盘；
 3. U 盘格式化成 **FAT32**：资源管理器右键 → 格式化 → 文件系统选 FAT32。U 盘超 32G 时资源管理器不给 FAT32 选项，用 Rufus 格：启动类型选「非可启动」，文件系统选 FAT32（Large FAT32）；
 4. 把 gibMacOS 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
 5. 把第 2 步填好三码的 **`EFI` 文件夹也拷到 U 盘根目录**（与 `com.apple.recovery.boot` 并列，不要多套一层目录）；
