@@ -81,15 +81,15 @@
 
 ## 制作安装 U 盘（在 Windows 上操作）
 
-前提提醒：没有现成 Mac 时，Windows 上拿不到官方安装器本体——微软商店/GitHub 上那些「一键黑苹果 U 盘」镜像都是第三方重打包，来源不干净、还容易被植入改版 EFI，**不要用**。下面两条路都是只用官方源：安装器走苹果官方恢复服务器（通过 gibMacOS 下载官方原版），EFI 用本包。
+前提提醒：没有现成 Mac 时，Windows 上拿不到官方安装器本体——微软商店/GitHub 上那些「一键黑苹果 U 盘」镜像都是第三方重打包，来源不干净、还容易被植入改版 EFI，**不要用**。下面两条路都是只用官方源：安装器走苹果官方恢复服务器（通过 OpenCore 自带的 macrecovery.py 下载官方原版），EFI 用本包。
 
 ### 主路线（无人值守型，最常用）：OpenCore 官方在线恢复镜像
 
 走这条路 U 盘里不放完整安装器，是从苹果服务器在线拉取安装，**装机时 P320 必须插网线**（有线网卡开箱可用；WiFi 在安装界面里还驱动不了）。
 
 1. 准备 **≥2G** 的 U 盘（推荐 ≥8G，FAT32 装得下即可），重要数据先备份，下一步会格式化；
-2. 在 Windows 上下载 **gibMacOS**（github.com/corpnewt/gibMacOS），解压后运行 `gibMacOS.bat`；
-3. 在 gibMacOS 里切换到 Sequoia：**先按 `R` 切换到 Recovery-Only 模式**（gibMacOS 默认下的是 15GB 完整安装器 `InstallAssistant.pkg`，Windows 上做不成启动盘，必须先切模式），再按 `C` 改目录、选 macOS Sequoia（15.x，**别选 Tahoe/26**）——列表按新到旧排列，Sequoia 在最前面几行，当前窗口只看到尾部老版本时往上滚动找，按提示下载；下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 BaseSystem.dmg + BaseSystem.chunklist，约 600MB）；
+2. 在 Windows 上装好 **Python 3**（python.org），再下载 **OpenCorePkg 1.0.8** 发布包（github.com/acidanthera/OpenCorePkg/releases），解压后找到 `Utilities/macrecovery/macrecovery.py`；
+3. 在 `macrecovery` 目录打开命令行，运行 `python macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download`（这是拉 Sequoia 15 恢复镜像的固定参数：board-id 对应一台最高只支持到 Sequoia 的机型，`m` 后是 17 个 0）；下载得到 `com.apple.recovery.boot` 文件夹（里面是 BaseSystem.dmg + BaseSystem.chunklist，约 600MB）。⚠️ **别用 gibMacOS**：它的 Recovery-Only 模式只认老式 `RecoveryHDUpdate.pkg`/`RecoveryHDMetaDmg.pkg`，Big Sur 之后的系统根本没有这两个包，Sequoia 永远不会出现在那个列表里；直接下的完整安装器 `InstallAssistant.pkg`（15GB）在 Windows 上也做不成启动盘；
 4. 把 U 盘格式化成 **FAT32**（资源管理器右键 → 格式化，文件系统选 FAT32）；U 盘超 32G 时资源管理器不给 FAT32 选项，用 **Rufus**（rufus.ie）格：启动类型选「非可启动」，文件系统选 FAT32（Large FAT32）；
 5. 把 gibMacOS 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
 6. 把本目录的 **`EFI` 文件夹也拷到 U 盘根目录**（与 `com.apple.recovery.boot` 并列，不要多套一层目录）；
