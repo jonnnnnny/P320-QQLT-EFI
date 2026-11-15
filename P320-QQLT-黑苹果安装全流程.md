@@ -84,7 +84,7 @@
 1. U 盘插 Windows 电脑，**先备份 U 盘里的数据**；
 2. 在 `macrecovery` 目录打开命令行，运行 `python macrecovery.py -b Mac-937A206F2EE63C01 -m 00000000000000000 download`（拉 Sequoia 15 恢复镜像的固定参数：board-id 对应一台最高只支持到 Sequoia 的机型，`m` 后是 17 个 0）。下载得到的是官方 Recovery 镜像，目录形如 `com.apple.recovery.boot`（里面是 `BaseSystem.dmg` + `BaseSystem.chunklist`，约 600MB）。⚠️ **别用 gibMacOS**：它的 Recovery-Only 模式只认老式 `RecoveryHDUpdate.pkg`/`RecoveryHDMetaDmg.pkg`，Big Sur 之后的系统根本没有这两个包，Sequoia 永远不会出现在那个列表里；直接下的完整安装器 `InstallAssistant.pkg`（15GB）在 Windows 上也做不成启动盘；
 3. U 盘格式化成 **FAT32**：资源管理器右键 → 格式化 → 文件系统选 FAT32。U 盘超 32G 时资源管理器不给 FAT32 选项，用 Rufus 格：启动类型选「非可启动」，文件系统选 FAT32（Large FAT32）；
-4. 把 gibMacOS 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
+4. 把 macrecovery 下好的 **`com.apple.recovery.boot` 整个文件夹**拷到 U 盘**根目录**；
 5. 把第 2 步填好三码的 **`EFI` 文件夹也拷到 U 盘根目录**（与 `com.apple.recovery.boot` 并列，不要多套一层目录）；
 6. （建议）把 `HeliPort.app` 和这份文档也拷到 U 盘根目录备用；
 7. **成品结构自检**（U 盘根目录应该长这样，缺一项就别开机）：
@@ -93,7 +93,7 @@
    - `com.apple.recovery.boot\BaseSystem.dmg`
    - `com.apple.recovery.boot\BaseSystem.chunklist`
 
-> ⚠️ 选错恢复镜像的信号：进 OpenCore 菜单显示的是别的系统版本、或提示要连 WiFi 且插网线没反应，多半是 gibMacOS 下错了目录/版本，回第 2 步重下 Sequoia 的 Recovery。
+> ⚠️ 选错恢复镜像的信号：进 OpenCore 菜单显示的是别的系统版本、或提示要连 WiFi 且插网线没反应，多半是恢复镜像下错了版本，回第 2 步重下 Sequoia 的 Recovery。
 
 ---
 
